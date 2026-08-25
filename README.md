@@ -1,5 +1,12 @@
 # shardian
 
+[![CI](https://github.com/b4moss/shardian/actions/workflows/ci.yml/badge.svg)](https://github.com/b4moss/shardian/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/codecov/c/github/b4moss/shardian)](https://codecov.io/gh/b4moss/shardian)
+[![npm](https://img.shields.io/npm/v/@b4moss/shardian)](https://www.npmjs.com/package/@b4moss/shardian)
+[![Release](https://img.shields.io/github/v/release/b4moss/shardian)](https://github.com/b4moss/shardian/releases)
+[![License](https://img.shields.io/github/license/b4moss/shardian)](https://github.com/b4moss/shardian/blob/main/LICENSE)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/b4moss/shardian/badge)](https://securityscorecards.dev/viewer/?uri=github.com/b4moss/shardian)
+
 Create sharded path library
 
 ファイル名からシャード階層（プレフィックス分割）のパス文字列を生成するヘルパーです。  
