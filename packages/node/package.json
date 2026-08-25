@@ -34,7 +34,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/b4moss/shardian.git",
+    "url": "https://github.com/b4moss/shardian",
     "directory": "packages/node"
   },
   "bugs": {
