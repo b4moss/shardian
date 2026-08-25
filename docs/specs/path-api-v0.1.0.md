@@ -1,8 +1,8 @@
-# パス生成 API
+# パス生成 API（v0.1.0）
 
-- **状態**: 仕様詳細
+- **状態**: 出荷済み（`@b4moss/shardian@0.1.0`）
 - **マイルストーン**: `v0.1.0`
-- **関連**: [docs/tests/shardian.md](../../tests/shardian.md)、[README.md](../../../README.md)
+- **関連**: 現行計画は [plans/v0.2.0/path-api.md](../plans/v0.2.0/path-api.md)、[README.md](../../README.md)
 
 ## 目的
 

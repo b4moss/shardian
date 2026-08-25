@@ -1,37 +1,39 @@
 # shardian テスト仕様
 
-- **対象マイルストーン**: `v0.1.0`（Node.js / `@b4moss/shardian`）
-- **対象ロジック**: `shardian(fileName, segmentLength, depth, includeFileName)`
-- **機能仕様**: [plans/v0.1.0/path-api.md](../plans/v0.1.0/path-api.md)
+- **対象マイルストーン**: `v0.2.0`（Node.js / `@b4moss/shardian`）
+- **対象ロジック**: `shardian(options: ShardianOption)`
+- **機能仕様**: [plans/v0.2.0/path-api.md](../plans/v0.2.0/path-api.md)
 
-文字は Unicode スカラー値（code point）単位。WARN は Node では `console.warn`。
+文字は Unicode スカラー値（code point）単位。
 
 ---
 
 ### shardian
 
-- ファイル名先頭から `segmentLength` 文字ずつ切り出し、最大 `depth` 段のディレクトリを組む
-- 戻り値の先頭は常に `/` とする
-- `includeFileName` が真なら末尾に元のファイル名を付与する
-- 文字が足りない場合は切れる範囲だけでパスを返し、要求深さ未達なら WARN を出す（エラーにはしない）
-- 空文字、または `/`・`\` を含むファイル名、不正な `segmentLength` / `depth` はエラーにする
+- オプションオブジェクトから、先頭 `dirLetterCount` 文字 × 最大 `dirNestDepth` 段のディレクトリを組む
+- 戻り値の先頭は常に `/`
+- `includeFileName` 省略時は `true`（末尾にファイル名）
+- 文字不足時は切れる範囲だけでパスを返す
+- `insufficientChars` 省略時は `'ignore'`（warn / throw しない）
+- 空文字・`/`・`\`・不正なカウントは常にエラー
 
 #### テスト：正常系
 
-- `shardian('abc1234.jpg', 1, 4, true)` → `'/a/b/c/1/abc1234.jpg'`（WARN なし）
-- `shardian('abc1234.jpg', 1, 4, false)` → `'/a/b/c/1'`（WARN なし）
-- `shardian('abcdef', 2, 2, true)` → `'/ab/cd/abcdef'`（WARN なし）
-- `shardian('ab', 1, 4, true)` → `'/a/b/ab'` かつ WARN（要求深さ 4、実際 2）
-- `shardian('abc', 2, 3, true)` → `'/ab/abc'` かつ WARN（要求深さ 3、実際 1）
-- `shardian('a', 2, 3, true)` → `'/a'` かつ WARN（セグメント 0）
+- `shardian({ fileName: 'abc1234.jpg', dirLetterCount: 1, dirNestDepth: 4 })` → `'/a/b/c/1/abc1234.jpg'`（WARN なし）
+- `shardian({ fileName: 'abc1234.jpg', dirLetterCount: 1, dirNestDepth: 4, includeFileName: false })` → `'/a/b/c/1'`（WARN なし）
+- `shardian({ fileName: 'abcdef', dirLetterCount: 2, dirNestDepth: 2 })` → `'/ab/cd/abcdef'`（WARN なし）
+- `shardian({ fileName: 'ab', dirLetterCount: 1, dirNestDepth: 4 })` → `'/a/b/ab'`（WARN なし・デフォルト ignore）
+- `shardian({ fileName: 'ab', dirLetterCount: 1, dirNestDepth: 4, insufficientChars: 'warn' })` → `'/a/b/ab'` かつ WARN
+- `shardian({ fileName: 'a', dirLetterCount: 2, dirNestDepth: 3, insufficientChars: 'ignore' })` → `'/a'`（WARN なし）
 
 #### テスト: 異常系
 
-- `fileName` が `''` → エラー
-- `fileName` が `'dir/a.jpg'`（`/` を含む）→ エラー
-- `fileName` が `'dir\\a.jpg'`（`\` を含む）→ エラー
-- `segmentLength` が `0` → エラー
-- `depth` が `0` → エラー
+- `fileName: ''` → エラー
+- `fileName: 'dir/a.jpg'` → エラー
+- `fileName: 'dir\\a.jpg'` → エラー
+- `dirLetterCount: 0` → エラー
+- `dirNestDepth: 0` → エラー
+- `fileName: 'ab', dirLetterCount: 1, dirNestDepth: 4, insufficientChars: 'throw'` → エラー（深さ未達）
 
 ----
 
