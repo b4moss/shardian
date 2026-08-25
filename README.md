@@ -31,12 +31,16 @@ console.log(path)
 ### ルール
 
 - **拡張子**: ファイル名の一部として扱う（除去しない）
-- **パス入力**: 許可しない。`/` を含むファイル名はエラー
+- **パス入力**: 許可しない。`/` または `\` を含むファイル名はエラー
+- **短いファイル名**: 指定深さに足りなくてもエラーにしない。切れる範囲だけでパスを作り、WARN を出す
 
 ```javascript
 shardian('abc1234.jpg', 1, 4, true)      // OK → '/a/b/c/1/abc1234.jpg'
+shardian('ab', 1, 4, true)               // OK → '/a/b/ab'（WARN）
 shardian('dir/abc1234.jpg', 1, 4, true)  // Error
 ```
+
+詳細は `docs/main.md` および `docs/plans/v0.1.0/path-api.md`。
 
 ## 対象言語
 
