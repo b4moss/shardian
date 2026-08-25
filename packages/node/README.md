@@ -5,7 +5,11 @@ Create sharded path strings from filenames.
 ```js
 import { shardian } from '@b4moss/shardian'
 
-shardian('abc1234.jpg', 1, 4, true)
+shardian({
+  fileName: 'abc1234.jpg',
+  dirLetterCount: 1,
+  dirNestDepth: 4,
+})
 // => '/a/b/c/1/abc1234.jpg'
 ```
 
