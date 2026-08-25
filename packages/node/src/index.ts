@@ -1,1 +1,5 @@
-export { shardian } from './shardian.js'
+export {
+  shardian,
+  type InsufficientChars,
+  type ShardianOption,
+} from './shardian.js'
