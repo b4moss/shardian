@@ -1,5 +1,12 @@
 # shardian
 
+[![CI](https://github.com/b4moss/shardian/actions/workflows/ci.yml/badge.svg)](https://github.com/b4moss/shardian/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/codecov/c/github/b4moss/shardian)](https://codecov.io/gh/b4moss/shardian)
+[![npm](https://img.shields.io/npm/v/@b4moss/shardian)](https://www.npmjs.com/package/@b4moss/shardian)
+[![Release](https://img.shields.io/github/v/release/b4moss/shardian)](https://github.com/b4moss/shardian/releases)
+[![License](https://img.shields.io/github/license/b4moss/shardian)](https://github.com/b4moss/shardian/blob/main/LICENSE)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/b4moss/shardian/badge)](https://securityscorecards.dev/viewer/?uri=github.com/b4moss/shardian)
+
 Create sharded path library
 
 ファイル名からシャード階層（プレフィックス分割）のパス文字列を生成するヘルパーです。  
@@ -8,44 +15,62 @@ I/O・ハッシュ計算・保存処理は行いません。責務はパス生�
 ## 機能
 
 ```javascript
-const fileName = 'abc1234.jpg'
-const path = shardian(fileName, 1, 4, true)
+import { shardian } from '@b4moss/shardian'
+
+const path = shardian({
+  fileName: 'abc1234.jpg',
+  dirLetterCount: 1,
+  dirNestDepth: 4,
+})
 
 console.log(path)
-
-// output: '/a/b/c/1/abc1234.jpg'
+// => '/a/b/c/1/abc1234.jpg'
 ```
 
-### 引数
+### オプション
 
-| 引数 | 例 | 意味 |
-| --- | --- | --- |
-| 1 | `'abc1234.jpg'` | ファイル名 |
-| 2 | `1` | 1階層あたりの文字数 |
-| 3 | `4` | 階層の深さ |
-| 4 | `true` | 末尾にファイル名を含めるか |
+| フィールド | 必須 | デフォルト | 意味 |
+| --- | --- | --- | --- |
+| `fileName` | はい | — | ファイル名（拡張子込み） |
+| `dirLetterCount` | はい | — | 1 階層あたりの文字数 |
+| `dirNestDepth` | はい | — | 階層の深さ |
+| `includeFileName` | いいえ | `true` | 末尾にファイル名を含めるか |
+| `insufficientChars` | いいえ | `'ignore'` | 文字不足時: `'ignore'` / `'warn'` / `'throw'` |
 
 - 先頭の `/` は常に付きます
-- 第4引数が `false` の場合: `'/a/b/c/1'`
+- `includeFileName: false` の例: `'/a/b/c/1'`
 
 ### ルール
 
 - **拡張子**: ファイル名の一部として扱う（除去しない）
 - **パス入力**: 許可しない。`/` または `\` を含むファイル名はエラー
-- **短いファイル名**: 指定深さに足りなくてもエラーにしない。切れる範囲だけでパスを作り、WARN を出す
+- **短いファイル名**: 切れる範囲だけでパスを作る。通知は `insufficientChars` で選ぶ（デフォルトは何も出さない）
 
 ```javascript
-shardian('abc1234.jpg', 1, 4, true)      // OK → '/a/b/c/1/abc1234.jpg'
-shardian('ab', 1, 4, true)               // OK → '/a/b/ab'（WARN）
-shardian('dir/abc1234.jpg', 1, 4, true)  // Error
+shardian({ fileName: 'abc1234.jpg', dirLetterCount: 1, dirNestDepth: 4 })
+// => '/a/b/c/1/abc1234.jpg'
+
+shardian({ fileName: 'ab', dirLetterCount: 1, dirNestDepth: 4 })
+// => '/a/b/ab'（warn なし）
+
+shardian({
+  fileName: 'ab',
+  dirLetterCount: 1,
+  dirNestDepth: 4,
+  insufficientChars: 'warn',
+})
+// => '/a/b/ab' + console.warn
+
+shardian({ fileName: 'dir/abc1234.jpg', dirLetterCount: 1, dirNestDepth: 4 })
+// Error
 ```
 
-詳細は `docs/main.md` および `docs/plans/v0.1.0/path-api.md`。
+詳細は `docs/main.md` および `docs/plans/v0.2.0/path-api.md`。
 
 ## 対象言語
 
-- Node.js（Bun, Deno 互換）: npm で配信
-- Go
+- Node.js（Bun, Deno 互換）: npm で配信（`@b4moss/shardian`）
+- Go（予定）
 
 ## License
 
