@@ -32,6 +32,7 @@
 |------|------|
 | [roadmap.md](./roadmap.md) | マイルストーン |
 | [plans/README.md](./plans/README.md) | 未実装計画の索引 |
+| [plans/v0.3.0/path-api.md](./plans/v0.3.0/path-api.md) | パス生成 API（v0.3.0） |
 | [plans/v0.2.0/path-api.md](./plans/v0.2.0/path-api.md) | パス生成 API（v0.2.0） |
 | [specs/path-api-v0.1.0.md](./specs/path-api-v0.1.0.md) | 出荷済み v0.1.0 契約 |
 | [tests/shardian.md](./tests/shardian.md) | テスト仕様（現行マイルストーン） |
