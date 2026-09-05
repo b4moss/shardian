@@ -10,7 +10,7 @@
 
 ### やること
 
-- ファイル名・階層文字数・深さ・末尾ファイル名の有無からパス文字列を返す
+- ファイル名・階層文字数・深さからシャードパス文字列（またはパス分割オブジェクト）を返す
 - Node.js（Bun / Deno 互換、npm 配信）。Go は後続マイルストーン
 
 ### やらないこと
@@ -32,6 +32,7 @@
 |------|------|
 | [roadmap.md](./roadmap.md) | マイルストーン |
 | [plans/README.md](./plans/README.md) | 未実装計画の索引 |
+| [plans/v0.4.0/path-api.md](./plans/v0.4.0/path-api.md) | パス生成 API（v0.4.0） |
 | [plans/v0.3.0/path-api.md](./plans/v0.3.0/path-api.md) | パス生成 API（v0.3.0） |
 | [plans/v0.2.0/path-api.md](./plans/v0.2.0/path-api.md) | パス生成 API（v0.2.0） |
 | [specs/path-api-v0.1.0.md](./specs/path-api-v0.1.0.md) | 出荷済み v0.1.0 契約 |
