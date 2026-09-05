@@ -7,12 +7,11 @@
 [![License](https://img.shields.io/github/license/b4moss/shardian)](https://github.com/b4moss/shardian/blob/main/LICENSE)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/b4moss/shardian/badge)](https://securityscorecards.dev/viewer/?uri=github.com/b4moss/shardian)
 
-Create sharded path library
+Create sharded path strings from filenames.
 
-ファイル名からシャード階層（プレフィックス分割）のパス文字列を生成するヘルパーです。  
-I/O・ハッシュ計算・保存処理は行いません。責務はパス生成のみです。
+This library only builds path strings from a filename prefix. It does not perform I/O, hashing, or persistence.
 
-## 機能
+## Usage
 
 ```javascript
 import { shardian } from '@b4moss/shardian'
@@ -23,36 +22,36 @@ console.log(path)
 // => '/a/b/c/1/abc1234.jpg'
 ```
 
-### オプション
+### Options
 
-| フィールド | 必須 | デフォルト | 意味 |
+| Field | Required | Default | Meaning |
 | --- | --- | --- | --- |
-| （第1引数）`fileName` | はい | — | ファイル名（拡張子込み） |
-| `dirLetterCount` | いいえ | `1` | 1 階層あたりの文字数 |
-| `dirNestDepth` | いいえ | `4` | 階層の深さ |
-| `stripHeadSlash` | いいえ | `false` | `true` なら先頭 `/` を付けない |
-| `splitPathFilename` | いいえ | `false` | `true` ならパス分割オブジェクトを返す |
-| `insufficientChars` | いいえ | `'ignore'` | 文字不足時: `'ignore'` / `'warn'` / `'throw'` |
-| `extensionOnlyList` | いいえ | `COMMON_EXTENSIONS` | 拡張子のみ判定リスト（完全置換。`[]` はデフォルトへフォールバック） |
+| (`fileName` as 1st arg) | yes | — | Filename including extension |
+| `dirLetterCount` | no | `1` | Characters per directory level |
+| `dirNestDepth` | no | `4` | Nesting depth |
+| `stripHeadSlash` | no | `false` | When `true`, omit the leading `/` |
+| `splitPathFilename` | no | `false` | When `true`, return a split path object |
+| `insufficientChars` | no | `'ignore'` | On short names: `'ignore'` / `'warn'` / `'throw'` |
+| `extensionOnlyList` | no | `COMMON_EXTENSIONS` | Full replacement list for extension-only checks (`[]` falls back to default) |
 
-- 文字列戻り値は常に末尾にファイル名を含む
-- ディレクトリ部分だけ欲しい場合: `splitPathFilename: true` の `pathOnly`（例: `'/a/b/c/1/'`）
-- `stripHeadSlash: true` の例: `'a/b/c/1/abc1234.jpg'`
+- The string return value always includes the filename at the end
+- For the directory part only, use `pathOnly` from `splitPathFilename: true` (e.g. `'/a/b/c/1/'`)
+- `stripHeadSlash: true` example: `'a/b/c/1/abc1234.jpg'`
 
-### ルール
+### Rules
 
-- **拡張子**: ファイル名の一部として扱う（除去しない）
-- **パス入力**: 許可しない。`/` または `\` を含むファイル名はエラー
-- **相対参照**: `.` / `..` / `./` / `../` はエラー
-- **拡張子のみ**: `COMMON_EXTENSIONS`（または `extensionOnlyList`）と大小無視で完全一致したらエラー
-- **短いファイル名**: 切れる範囲だけでパスを作る。通知は `insufficientChars` で選ぶ（デフォルトは何も出さない）
+- **Extension**: Kept as part of the filename (never stripped)
+- **Path input**: Not allowed. Filenames containing `/` or `\` throw
+- **Relative refs**: `.` / `..` / `./` / `../` throw
+- **Extension-only**: Throws when the name case-insensitively equals an entry in `COMMON_EXTENSIONS` (or `extensionOnlyList`)
+- **Short filenames**: Build from what fits. Notification is controlled by `insufficientChars` (default: silent)
 
 ```javascript
 shardian('abc1234.jpg')
 // => '/a/b/c/1/abc1234.jpg'
 
 shardian('ab', { dirLetterCount: 1, dirNestDepth: 4 })
-// => '/a/b/ab'（warn なし）
+// => '/a/b/ab' (no warn)
 
 shardian('ab', {
   dirLetterCount: 1,
@@ -61,6 +60,9 @@ shardian('ab', {
 })
 // => '/a/b/ab' + console.warn
 
+const { pathOnly } = shardian('abc1234.jpg', { splitPathFilename: true })
+// pathOnly => '/a/b/c/1/'
+
 shardian('dir/abc1234.jpg')
 // Error
 
@@ -68,12 +70,12 @@ shardian('.jpg')
 // Error
 ```
 
-詳細は `docs/main.md` および `docs/plans/v0.4.0/path-api.md`。
+Full contract: [`docs/specs/path-api.md`](docs/specs/path-api.md). Hub: [`docs/main.md`](docs/main.md).
 
-## 対象言語
+## Supported runtimes
 
-- Node.js（Bun, Deno 互換）: npm で配信（`@b4moss/shardian`）
-- Go（予定）
+- Node.js (Bun / Deno compatible): published on npm as `@b4moss/shardian`
+- Go / PHP: planned
 
 ## License
 
