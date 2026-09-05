@@ -30,13 +30,13 @@ console.log(path)
 | （第1引数）`fileName` | はい | — | ファイル名（拡張子込み） |
 | `dirLetterCount` | いいえ | `1` | 1 階層あたりの文字数 |
 | `dirNestDepth` | いいえ | `4` | 階層の深さ |
-| `includeFileName` | いいえ | `true` | 末尾にファイル名を含めるか |
 | `stripHeadSlash` | いいえ | `false` | `true` なら先頭 `/` を付けない |
 | `splitPathFilename` | いいえ | `false` | `true` ならパス分割オブジェクトを返す |
 | `insufficientChars` | いいえ | `'ignore'` | 文字不足時: `'ignore'` / `'warn'` / `'throw'` |
 | `extensionOnlyList` | いいえ | `COMMON_EXTENSIONS` | 拡張子のみ判定リスト（完全置換。`[]` はデフォルトへフォールバック） |
 
-- `includeFileName: false` の例: `'/a/b/c/1'`
+- 文字列戻り値は常に末尾にファイル名を含む
+- ディレクトリ部分だけ欲しい場合: `splitPathFilename: true` の `pathOnly`（例: `'/a/b/c/1/'`）
 - `stripHeadSlash: true` の例: `'a/b/c/1/abc1234.jpg'`
 
 ### ルール
@@ -68,7 +68,7 @@ shardian('.jpg')
 // Error
 ```
 
-詳細は `docs/main.md` および `docs/plans/v0.3.0/path-api.md`。
+詳細は `docs/main.md` および `docs/plans/v0.4.0/path-api.md`。
 
 ## 対象言語
 
