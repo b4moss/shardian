@@ -1,16 +1,19 @@
 name: CI
 
+# Align with docs/charter/git-rule.md:
+# - PR → develop (from dev-v*): CI required
+# - PR → main (from develop): CI as a precaution
+# - PR → release: no CI (release merge is CD via publish-npm)
+# Badge-related work (CI badge + Codecov) runs only on main merge (push).
 on:
   push:
     branches:
       - main
-      - develop
   pull_request:
     branches:
       - main
       - develop
       - "dev-v*"
-      - release
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -41,17 +44,22 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Test
+        if: github.event_name == 'pull_request'
+        run: npm test
+
       - name: Test with coverage
+        if: github.event_name == 'push'
         run: npm run test:coverage
 
       - name: Upload coverage to Codecov
+        if: github.event_name == 'push'
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: packages/node/coverage/lcov.info
           disable_search: true
           fail_ci_if_error: false
-          verbose: true
 
       - name: Build
         run: npm run build
