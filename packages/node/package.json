@@ -21,7 +21,7 @@
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "test": "rm -rf dist && tsc && node --test dist/shardian.test.js",
     "prepublishOnly": "npm run build",
-    "test:coverage": "c8 --reporter=lcov --reporter=text npm test"
+    "test:coverage": "c8 npm test"
   },
   "engines": {
     "node": ">=18"

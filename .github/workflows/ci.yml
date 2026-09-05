@@ -1,8 +1,13 @@
 name: CI
 
 on:
+  push:
+    branches:
+      - main
+      - develop
   pull_request:
     branches:
+      - main
       - develop
       - "dev-v*"
       - release
@@ -44,6 +49,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: packages/node/coverage/lcov.info
+          disable_search: true
           fail_ci_if_error: false
           verbose: true
 

@@ -1,0 +1,12 @@
+{
+  "exclude": [
+    "coverage/**",
+    "dist/**",
+    "node_modules/**",
+    "**/*.test.ts",
+    "**/*.test.js",
+    "**/*.d.ts"
+  ],
+  "excludeAfterRemap": true,
+  "reporter": ["lcov", "text"]
+}
