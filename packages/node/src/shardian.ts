@@ -4,7 +4,6 @@ export type ShardianOption = {
   dirLetterCount?: number
   dirNestDepth?: number
   stripHeadSlash?: boolean
-  includeFileName?: boolean
   insufficientChars?: InsufficientChars
   splitPathFilename?: boolean
   extensionOnlyList?: string[]
@@ -14,11 +13,6 @@ export type ShardianSplitPath = {
   fullPath: string
   pathOnly: string
   fileNameOnly: string
-}
-
-export type ShardianSplitPathDirOnly = {
-  fullPath: string
-  pathOnly: string
 }
 
 export const COMMON_EXTENSIONS: string[] = [
@@ -103,35 +97,20 @@ export const COMMON_EXTENSIONS: string[] = [
 ]
 
 type ShardianSplitOptions = ShardianOption & { splitPathFilename: true }
-type ShardianSplitWithFile = ShardianSplitOptions & {
-  includeFileName?: true
-}
-type ShardianSplitDirOnly = ShardianSplitOptions & {
-  includeFileName: false
-}
 
 export function shardian(
   fileName: string,
-  option: ShardianSplitDirOnly,
-): ShardianSplitPathDirOnly
-export function shardian(
-  fileName: string,
-  option: ShardianSplitWithFile,
-): ShardianSplitPath
-export function shardian(
-  fileName: string,
   option: ShardianSplitOptions,
-): ShardianSplitPath | ShardianSplitPathDirOnly
+): ShardianSplitPath
 export function shardian(fileName: string, option?: ShardianOption): string
 export function shardian(
   fileName: string,
   option?: ShardianOption,
-): string | ShardianSplitPath | ShardianSplitPathDirOnly {
+): string | ShardianSplitPath {
   const {
     dirLetterCount = 1,
     dirNestDepth = 4,
     stripHeadSlash = false,
-    includeFileName = true,
     insufficientChars = 'ignore',
     splitPathFilename = false,
     extensionOnlyList,
@@ -203,35 +182,22 @@ export function shardian(
     }
   }
 
-  const { fullPath, pathOnly } = assemblePaths(
-    segments,
-    fileName,
-    includeFileName,
-    stripHeadSlash,
-  )
+  const { fullPath, pathOnly } = assemblePaths(segments, fileName, stripHeadSlash)
 
   if (!splitPathFilename) {
     return fullPath
   }
 
-  if (includeFileName) {
-    return {
-      fullPath,
-      pathOnly,
-      fileNameOnly: fileName,
-    }
-  }
-
   return {
     fullPath,
     pathOnly,
+    fileNameOnly: fileName,
   }
 }
 
 function assemblePaths(
   segments: string[],
   fileName: string,
-  includeFileName: boolean,
   stripHeadSlash: boolean,
 ): { fullPath: string; pathOnly: string } {
   let pathOnly: string
@@ -243,18 +209,11 @@ function assemblePaths(
   }
 
   let fullPath: string
-  if (includeFileName) {
-    if (segments.length === 0) {
-      fullPath = stripHeadSlash ? fileName : `/${fileName}`
-    } else {
-      const body = segments.join('/')
-      fullPath = stripHeadSlash ? `${body}/${fileName}` : `/${body}/${fileName}`
-    }
-  } else if (segments.length === 0) {
-    fullPath = stripHeadSlash ? '' : '/'
+  if (segments.length === 0) {
+    fullPath = stripHeadSlash ? fileName : `/${fileName}`
   } else {
     const body = segments.join('/')
-    fullPath = stripHeadSlash ? body : `/${body}`
+    fullPath = stripHeadSlash ? `${body}/${fileName}` : `/${body}/${fileName}`
   }
 
   return { fullPath, pathOnly }
