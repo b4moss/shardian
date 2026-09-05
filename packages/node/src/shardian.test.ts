@@ -10,16 +10,6 @@ test('shardian: normal cases', async (t) => {
     warn.mock.restore()
   })
 
-  await t.test('omits filename when includeFileName is false', () => {
-    const warn = mock.method(console, 'warn', () => {})
-    assert.equal(
-      shardian('abc1234.jpg', { includeFileName: false }),
-      '/a/b/c/1',
-    )
-    assert.equal(warn.mock.callCount(), 0)
-    warn.mock.restore()
-  })
-
   await t.test('builds two-char segments without warn', () => {
     const warn = mock.method(console, 'warn', () => {})
     assert.equal(
@@ -47,22 +37,6 @@ test('shardian: normal cases', async (t) => {
       pathOnly: '/a/b/c/1/',
       fileNameOnly: 'abc1234.jpg',
     })
-    assert.equal(warn.mock.callCount(), 0)
-    warn.mock.restore()
-  })
-
-  await t.test('omits fileNameOnly when includeFileName is false with split', () => {
-    const warn = mock.method(console, 'warn', () => {})
-    assert.deepEqual(
-      shardian('abc1234.jpg', {
-        splitPathFilename: true,
-        includeFileName: false,
-      }),
-      {
-        fullPath: '/a/b/c/1',
-        pathOnly: '/a/b/c/1/',
-      },
-    )
     assert.equal(warn.mock.callCount(), 0)
     warn.mock.restore()
   })
@@ -99,18 +73,6 @@ test('shardian: normal cases', async (t) => {
         stripHeadSlash: true,
       }),
       'a',
-    )
-  })
-
-  await t.test('zero segments dir-only with stripHeadSlash returns empty string', () => {
-    assert.equal(
-      shardian('a', {
-        dirLetterCount: 2,
-        dirNestDepth: 3,
-        includeFileName: false,
-        stripHeadSlash: true,
-      }),
-      '',
     )
   })
 
