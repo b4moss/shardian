@@ -11,3 +11,10 @@ coverage:
         informational: true
 
 comment: false
+
+ignore:
+  - "packages/node/dist/**"
+  - "packages/node/coverage/**"
+  - "**/*.test.ts"
+  - "**/*.test.js"
+  - "**/*.d.ts"
