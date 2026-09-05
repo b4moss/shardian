@@ -14,9 +14,12 @@ shardian('abc1234.jpg', {
   stripHeadSlash: true,
 })
 // => 'a/b/c/1/abc1234.jpg'
+
+const { pathOnly } = shardian('abc1234.jpg', { splitPathFilename: true })
+// pathOnly => '/a/b/c/1/'
 ```
 
-See the repository root README and `docs/` for the full contract.
+See the repository root README and `docs/specs/path-api.md` for the full contract.
 
 ## License
 

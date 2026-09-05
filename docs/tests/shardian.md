@@ -2,7 +2,7 @@
 
 - **対象マイルストーン**: `v0.4.0`（Node.js / `@b4moss/shardian`）
 - **対象ロジック**: `shardian(fileName: string, option?: ShardianOption)`
-- **機能仕様**: [plans/v0.4.0/path-api.md](../plans/v0.4.0/path-api.md)
+- **機能仕様**: [specs/path-api.md](../specs/path-api.md)
 
 文字は Unicode スカラー値（code point）単位。
 

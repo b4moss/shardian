@@ -1,12 +1,15 @@
 # plans 索引
 
-| 版 / 場所 | 内容 | 状態 |
-|-----------|------|------|
-| [v0.4.0/path-api.md](./v0.4.0/path-api.md) | `includeFileName` 廃止（`splitPathFilename` で代用） | 仕様詳細 |
-| [v0.3.0/path-api.md](./v0.3.0/path-api.md) | 位置引数 API + strip/split + 拡張子のみエラー | 仕様詳細（実装済・specs 未昇格） |
-| [v0.2.0/path-api.md](./v0.2.0/path-api.md) | オブジェクト API + `insufficientChars` | 仕様詳細（実装済・specs 未昇格） |
+未実装の計画は現時点でなし。
 
-出荷済みの v0.1.0 契約は [specs/path-api-v0.1.0.md](../specs/path-api-v0.1.0.md)。
+将来候補（Issue のみ。詳細は未転記）:
+
+| 候補 | Issue |
+|------|-------|
+| Go モジュール版 | [#14](https://github.com/b4moss/shardian/issues/14) |
+| PHP（Composer）版 | [#18](https://github.com/b4moss/shardian/issues/18) |
+
+現行仕様は [specs/path-api.md](../specs/path-api.md)。旧契約は [_archived/specs/](../_archived/specs/)。
 
 ----
 

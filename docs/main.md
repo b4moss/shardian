@@ -11,7 +11,7 @@
 ### やること
 
 - ファイル名・階層文字数・深さからシャードパス文字列（またはパス分割オブジェクト）を返す
-- Node.js（Bun / Deno 互換、npm 配信）。Go は後続マイルストーン
+- Node.js（Bun / Deno 互換、npm 配信）。Go / PHP は後続マイルストーン
 
 ### やらないこと
 
@@ -23,7 +23,7 @@
 
 - パッケージライブラリ（薄い DDD の CRUD Trait は採用しない）
 - 憲章（`docs/charter/`）に従う。独自例外は `docs/override-charter.md`
-- 仕様正本の置き場は本ファイルおよび `docs/plans/` → 実装後 `docs/specs/`
+- 仕様正本の置き場は本ファイルおよび `docs/specs/`（未実装は `docs/plans/`）
 - テスト仕様は `docs/tests/`
 
 ## 索引
@@ -31,12 +31,10 @@
 | 文書 | 内容 |
 |------|------|
 | [roadmap.md](./roadmap.md) | マイルストーン |
+| [specs/path-api.md](./specs/path-api.md) | パス生成 API（現行・v0.4.0） |
 | [plans/README.md](./plans/README.md) | 未実装計画の索引 |
-| [plans/v0.4.0/path-api.md](./plans/v0.4.0/path-api.md) | パス生成 API（v0.4.0） |
-| [plans/v0.3.0/path-api.md](./plans/v0.3.0/path-api.md) | パス生成 API（v0.3.0） |
-| [plans/v0.2.0/path-api.md](./plans/v0.2.0/path-api.md) | パス生成 API（v0.2.0） |
-| [specs/path-api-v0.1.0.md](./specs/path-api-v0.1.0.md) | 出荷済み v0.1.0 契約 |
-| [tests/shardian.md](./tests/shardian.md) | テスト仕様（現行マイルストーン） |
+| [_archived/README.md](./_archived/README.md) | 旧契約・歴史資料 |
+| [tests/shardian.md](./tests/shardian.md) | テスト仕様（現行） |
 
 ----
 
