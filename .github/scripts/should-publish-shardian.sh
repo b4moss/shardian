@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
-# Decide whether @b4moss/shardian should be published from the current HEAD.
+# Decide whether @b4moss/shardian (Node) should be published from the current HEAD.
 # Outputs GitHub Actions-style keys to GITHUB_OUTPUT when set:
 #   skip=true|false
 #   tag=vX.Y.Z (when not skipped for missing tag)
+#
+# Node-only: root tags vX.Y.Z tied to packages/node/package.json.
+# Go tags (packages/go/v*) must never drive this script.
 set -euo pipefail
 
 ROOT="$(git rev-parse --show-toplevel)"
@@ -30,6 +33,11 @@ skip() {
 # usually do not carry the tag themselves).
 PKG_VER="$(node -p "require('${PKG_DIR}/package.json').version")"
 TAG="v${PKG_VER}"
+
+# Root Node tags only (reject nested module tags if misused as package version).
+if [[ "$TAG" == */* ]] || [[ ! "$TAG" =~ ^v[0-9] ]]; then
+  skip "Refusing non-Node tag form ${TAG}; npm publish uses root vX.Y.Z only."
+fi
 
 if ! git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
   skip "No git tag ${TAG} for packages/node version ${PKG_VER}; skip npm publish."
