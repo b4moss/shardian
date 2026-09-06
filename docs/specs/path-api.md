@@ -1,8 +1,8 @@
 # パス生成 API
 
-- **状態**: 出荷済み（`@b4moss/shardian@0.4.0`）
+- **状態**: 出荷済み（`@b4moss/shardian@0.4.0` / Go `packages/go`）
 - **マイルストーン**: `v0.4.0`
-- **関連**: [docs/tests/shardian.md](../tests/shardian.md)、[README.md](../../README.md)
+- **関連**: [docs/tests/shardian.md](../tests/shardian.md)、[docs/tests/shardian-go.md](../tests/shardian-go.md)、[README.md](../../README.md)
 - **前版**: [path-api-v0.3.0.md](../_archived/specs/path-api-v0.3.0.md)
 
 ## 目的
@@ -36,6 +36,7 @@ function shardian(fileName: string, option?: ShardianOption): string | ShardianS
 - 第2引数は **`option?: ShardianOption`**。省略または `undefined` で全デフォルト。`null` は受けない
 - 公開定数 **`COMMON_EXTENSIONS`**（ドット付き拡張子の配列）をエクスポートする
 - `includeFileName` は存在しない
+- **Go 写経**: `splitPathFilename` は `Shardian` / `ShardianSplit` の関数分離。`warn` は標準 `log`。詳細は [tests/shardian-go.md](../tests/shardian-go.md)
 
 ### フィールド
 

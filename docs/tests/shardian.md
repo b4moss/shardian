@@ -1,8 +1,9 @@
-# shardian テスト仕様
+# shardian テスト仕様（Node.js）
 
 - **対象マイルストーン**: `v0.4.0`（Node.js / `@b4moss/shardian`）
 - **対象ロジック**: `shardian(fileName: string, option?: ShardianOption)`
 - **機能仕様**: [specs/path-api.md](../specs/path-api.md)
+- **Go 版テスト仕様**: [shardian-go.md](./shardian-go.md)（ケース対応は同一）
 
 文字は Unicode スカラー値（code point）単位。
 

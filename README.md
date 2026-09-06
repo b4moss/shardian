@@ -75,7 +75,22 @@ Full contract: [`docs/specs/path-api.md`](docs/specs/path-api.md). Hub: [`docs/m
 ## Supported runtimes
 
 - Node.js (Bun / Deno compatible): published on npm as `@b4moss/shardian`
-- Go / PHP: planned
+- Go: `github.com/b4moss/shardian/packages/go`
+- PHP: planned
+
+### Go
+
+```go
+import shardian "github.com/b4moss/shardian/packages/go"
+
+path, err := shardian.Shardian("abc1234.jpg", nil)
+// path => "/a/b/c/1/abc1234.jpg"
+
+split, err := shardian.ShardianSplit("abc1234.jpg", nil)
+// split.PathOnly => "/a/b/c/1/"
+```
+
+`go get github.com/b4moss/shardian/packages/go@latest`
 
 ## License
 

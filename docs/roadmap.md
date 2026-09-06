@@ -11,7 +11,7 @@
 
 | 候補 | 状態 | メモ |
 |------|------|------|
-| Go モジュール | Issue のみ | [#14](https://github.com/b4moss/shardian/issues/14) |
+| Go モジュール | 実装済 | [#14](https://github.com/b4moss/shardian/issues/14) / `packages/go` |
 | PHP（Composer） | Issue のみ | [#18](https://github.com/b4moss/shardian/issues/18) |
 
 ----
