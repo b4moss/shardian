@@ -1,9 +1,15 @@
 name: Publish npm
 
+# Node port only. Go-only merges to release must not publish to npm.
+# Independent SemVer: packages/node/package.json + root tag vX.Y.Z.
 on:
   push:
     branches:
       - release
+    paths:
+      - "packages/node/**"
+      - ".github/workflows/publish-npm.yml"
+      - ".github/scripts/should-publish-shardian.sh"
 
 concurrency:
   group: publish-npm-${{ github.workflow }}-${{ github.ref }}
@@ -35,24 +41,37 @@ jobs:
           cache: npm
           cache-dependency-path: packages/node/package-lock.json
 
-      - name: Upgrade npm for Trusted Publishing
-        run: npm install -g npm@latest
+      # Tag / ancestry only — skip install+build when there is nothing to publish.
+      - name: Gate publish eligibility
+        id: gate
+        working-directory: .
+        run: bash .github/scripts/should-publish-shardian.sh gate
+
+      # Pin npm for Trusted Publishing (OIDC provenance); avoid npm@latest churn.
+      - name: Install npm for Trusted Publishing
+        if: steps.gate.outputs.skip != 'true'
+        run: npm install -g npm@11
 
       - name: Install dependencies
+        if: steps.gate.outputs.skip != 'true'
         run: npm ci
 
-      - name: Build
-        run: npm run build
-
-      - name: Decide whether to publish
-        id: decide
-        working-directory: .
-        run: bash .github/scripts/should-publish-shardian.sh
-
+      # One full compile for tests, then a clean production build for the tarball.
       - name: Test
-        if: steps.decide.outputs.skip != 'true'
+        if: steps.gate.outputs.skip != 'true'
         run: npm test
 
+      - name: Build
+        if: steps.gate.outputs.skip != 'true'
+        run: npm run build
+
+      - name: Compare with published package
+        id: decide
+        if: steps.gate.outputs.skip != 'true'
+        working-directory: .
+        run: bash .github/scripts/should-publish-shardian.sh compare
+
+      # dist already built; skip prepublishOnly rebuild.
       - name: Publish to npm
-        if: steps.decide.outputs.skip != 'true'
-        run: npm publish --access public --provenance
+        if: steps.gate.outputs.skip != 'true' && steps.decide.outputs.skip != 'true'
+        run: npm publish --access public --provenance --ignore-scripts

@@ -77,7 +77,9 @@
 ## タグの切り方
 
 - [versioning-rule.md](./versioning-rule.md)を参照。
- 
+- Node: `vX.Y.Z` / Go: `packages/go/vX.Y.Z`（言語ポートごとに独立）
+- `release` は共通の出荷ブランチのまま。npm 公開は Node（`packages/node/**`）変更時のみ
+
 -----
 
 以上

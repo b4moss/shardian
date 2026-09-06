@@ -1,7 +1,7 @@
 name: OpenSSF Scorecard
 
-# Badge / published results only make sense on the default branch.
-# develop push always failed: "refs/heads/develop not supported with push event."
+# Badge / published results only work on the default branch.
+# develop push always failed: "Only the default branch main is supported."
 on:
   branch_protection_rule:
   schedule:
