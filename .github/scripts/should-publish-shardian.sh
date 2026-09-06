@@ -53,14 +53,6 @@ fi
 echo "Using tag ${TAG} at ${TAG_COMMIT} (HEAD=${HEAD_COMMIT})."
 emit "tag" "$TAG"
 
-# If packages/node is unchanged since the tag commit, do not republish.
-# (Go-only or docs-only commits on top of a Node tag stay skipped.)
-if [[ "$TAG_COMMIT" != "$HEAD_COMMIT" ]]; then
-  if git diff --quiet "$TAG_COMMIT" "$HEAD_COMMIT" -- packages/node; then
-    skip "packages/node unchanged since ${TAG}; skip npm publish."
-  fi
-fi
-
 PUBLISHED="$(npm view @b4moss/shardian version 2>/dev/null || true)"
 if [[ -z "$PUBLISHED" ]]; then
   echo "@b4moss/shardian is not on npm yet; will publish ${PKG_VER}."
