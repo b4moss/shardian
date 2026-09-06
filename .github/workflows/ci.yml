@@ -1,16 +1,30 @@
 name: CI
 
+# Align with docs/charter/git-rule.md:
+# - PR → develop (from dev-v*): CI required
+# - PR → main (from develop): CI as a precaution
+# - PR → release: no CI (release merge is CD via publish-npm)
+# Badge / Codecov upload runs only on main push.
+# Docs-only changes do not start this workflow.
 on:
   push:
     branches:
       - main
-      - develop
+    paths:
+      - "packages/node/**"
+      - "packages/go/**"
+      - ".github/workflows/ci.yml"
+      - "codecov.yml"
   pull_request:
     branches:
       - main
       - develop
       - "dev-v*"
-      - release
+    paths:
+      - "packages/node/**"
+      - "packages/go/**"
+      - ".github/workflows/ci.yml"
+      - "codecov.yml"
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -20,8 +34,35 @@ permissions:
   contents: read
 
 jobs:
+  changes:
+    name: detect path changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      node: ${{ steps.filter.outputs.node }}
+      go: ${{ steps.filter.outputs.go }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Filter paths
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            node:
+              - 'packages/node/**'
+              - '.github/workflows/ci.yml'
+              - 'codecov.yml'
+            go:
+              - 'packages/go/**'
+              - '.github/workflows/ci.yml'
+              - 'codecov.yml'
+
   node:
     name: packages/node
+    needs: changes
+    if: needs.changes.outputs.node == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     defaults:
@@ -41,17 +82,59 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Test
+        if: github.event_name == 'pull_request'
+        run: npm test
+
       - name: Test with coverage
+        if: github.event_name == 'push'
         run: npm run test:coverage
 
       - name: Upload coverage to Codecov
+        if: github.event_name == 'push'
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: packages/node/coverage/lcov.info
           disable_search: true
           fail_ci_if_error: false
-          verbose: true
 
-      - name: Build
-        run: npm run build
+      # test/test:coverage already ran full tsc; only typecheck the publish config.
+      - name: Verify production build config
+        run: npx tsc -p tsconfig.build.json --noEmit
+
+  go:
+    name: packages/go
+    needs: changes
+    if: needs.changes.outputs.go == 'true' && hashFiles('packages/go/go.mod') != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: packages/go
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+          cache-dependency-path: packages/go/go.sum
+
+      - name: Test
+        if: github.event_name == 'pull_request'
+        run: go test ./...
+
+      - name: Test with coverage
+        if: github.event_name == 'push'
+        run: go test ./... -coverprofile=coverage.out
+
+      - name: Upload coverage to Codecov
+        if: github.event_name == 'push'
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: packages/go/coverage.out
+          disable_search: true
+          fail_ci_if_error: false
