@@ -54,10 +54,12 @@ jobs:
               - 'packages/node/**'
               - '.github/workflows/ci.yml'
               - 'codecov.yml'
+            # Only real Go module sources (not .gitkeep). Avoids job.if hashFiles,
+            # which GitHub Actions rejects at workflow parse time.
             go:
-              - 'packages/go/**'
-              - '.github/workflows/ci.yml'
-              - 'codecov.yml'
+              - 'packages/go/**/*.go'
+              - 'packages/go/go.mod'
+              - 'packages/go/go.sum'
 
   node:
     name: packages/node
@@ -106,7 +108,7 @@ jobs:
   go:
     name: packages/go
     needs: changes
-    if: needs.changes.outputs.go == 'true' && hashFiles('packages/go/go.mod') != ''
+    if: needs.changes.outputs.go == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     defaults:
