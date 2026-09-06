@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
-# Decide whether @b4moss/shardian should be published from the current HEAD.
+# Decide whether @b4moss/shardian (Node) should be published from the current HEAD.
 # Outputs GitHub Actions-style keys to GITHUB_OUTPUT when set:
 #   skip=true|false
 #   tag=vX.Y.Z (when not skipped for missing tag)
+#
+# Node-only: root tags vX.Y.Z tied to packages/node/package.json.
+# Go tags (packages/go/v*) must never drive this script.
 set -euo pipefail
 
 ROOT="$(git rev-parse --show-toplevel)"
@@ -31,6 +34,11 @@ skip() {
 PKG_VER="$(node -p "require('${PKG_DIR}/package.json').version")"
 TAG="v${PKG_VER}"
 
+# Root Node tags only (reject nested module tags if misused as package version).
+if [[ "$TAG" == */* ]] || [[ ! "$TAG" =~ ^v[0-9] ]]; then
+  skip "Refusing non-Node tag form ${TAG}; npm publish uses root vX.Y.Z only."
+fi
+
 if ! git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
   skip "No git tag ${TAG} for packages/node version ${PKG_VER}; skip npm publish."
 fi
@@ -44,6 +52,14 @@ fi
 
 echo "Using tag ${TAG} at ${TAG_COMMIT} (HEAD=${HEAD_COMMIT})."
 emit "tag" "$TAG"
+
+# If packages/node is unchanged since the tag commit, do not republish.
+# (Go-only or docs-only commits on top of a Node tag stay skipped.)
+if [[ "$TAG_COMMIT" != "$HEAD_COMMIT" ]]; then
+  if git diff --quiet "$TAG_COMMIT" "$HEAD_COMMIT" -- packages/node; then
+    skip "packages/node unchanged since ${TAG}; skip npm publish."
+  fi
+fi
 
 PUBLISHED="$(npm view @b4moss/shardian version 2>/dev/null || true)"
 if [[ -z "$PUBLISHED" ]]; then

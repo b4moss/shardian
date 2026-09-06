@@ -1,9 +1,13 @@
 name: Release on tag
 
+# Language-scoped tags only:
+#   vX.Y.Z              → Node (@b4moss/shardian)
+#   packages/go/vX.Y.Z  → Go module (no npm)
 on:
   push:
     tags:
-      - "**"
+      - "v[0-9]*"
+      - "packages/go/v[0-9]*"
 
 permissions:
   contents: write
@@ -29,8 +33,14 @@ jobs:
           if [[ "$TAG" =~ (alpha|beta|rc|rev|doc|docs) ]]; then
             PRE+=(--prerelease)
           fi
+          TITLE="$TAG"
+          if [[ "$TAG" == packages/go/v* ]]; then
+            TITLE="Go ${TAG#packages/go/}"
+          elif [[ "$TAG" == v* ]]; then
+            TITLE="Node ${TAG}"
+          fi
           gh release create "$TAG" \
-            --title "$TAG" \
+            --title "$TITLE" \
             --generate-notes \
             --verify-tag \
             "${PRE[@]}"

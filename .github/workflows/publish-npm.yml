@@ -1,9 +1,13 @@
 name: Publish npm
 
+# Node port only. Go-only merges to release must not publish to npm.
+# Independent SemVer: packages/node/package.json + root tag vX.Y.Z.
 on:
   push:
     branches:
       - release
+    paths:
+      - "packages/node/**"
 
 concurrency:
   group: publish-npm-${{ github.workflow }}-${{ github.ref }}
