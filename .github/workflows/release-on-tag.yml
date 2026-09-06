@@ -15,10 +15,9 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
+      # No checkout: gh talks to the API; --verify-tag checks the remote tag.
       - name: Create GitHub Release if missing
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

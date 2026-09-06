@@ -1,16 +1,21 @@
 #!/usr/bin/env bash
 # Decide whether @b4moss/shardian (Node) should be published from the current HEAD.
+# Usage: should-publish-shardian.sh [gate|compare|all]
+#   gate    — tag / ancestry checks only (no dist, no npm pack). Run before npm ci.
+#   compare — content diff vs npm (requires packages/node/dist). Run after build.
+#   all     — gate then compare (default; for local use).
+#
 # Outputs GitHub Actions-style keys to GITHUB_OUTPUT when set:
 #   skip=true|false
-#   tag=vX.Y.Z (when not skipped for missing tag)
+#   tag=vX.Y.Z (when gate passes)
 #
 # Node-only: root tags vX.Y.Z tied to packages/node/package.json.
 # Go tags (packages/go/v*) must never drive this script.
 set -euo pipefail
 
+MODE="${1:-all}"
 ROOT="$(git rev-parse --show-toplevel)"
 PKG_DIR="$ROOT/packages/node"
-OUT="${GITHUB_OUTPUT:-/dev/stdout}"
 
 emit() {
   local key="$1"
@@ -29,61 +34,69 @@ skip() {
   exit 0
 }
 
-# Accept a v* tag on HEAD or on an ancestor (merge commits onto release
-# usually do not carry the tag themselves).
-PKG_VER="$(node -p "require('${PKG_DIR}/package.json').version")"
-TAG="v${PKG_VER}"
+run_gate() {
+  local pkg_ver tag tag_commit head_commit
+  pkg_ver="$(node -p "require('${PKG_DIR}/package.json').version")"
+  tag="v${pkg_ver}"
 
-# Root Node tags only (reject nested module tags if misused as package version).
-if [[ "$TAG" == */* ]] || [[ ! "$TAG" =~ ^v[0-9] ]]; then
-  skip "Refusing non-Node tag form ${TAG}; npm publish uses root vX.Y.Z only."
-fi
+  # Root Node tags only (reject nested module tags if misused as package version).
+  if [[ "$tag" == */* ]] || [[ ! "$tag" =~ ^v[0-9] ]]; then
+    skip "Refusing non-Node tag form ${tag}; npm publish uses root vX.Y.Z only."
+  fi
 
-if ! git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
-  skip "No git tag ${TAG} for packages/node version ${PKG_VER}; skip npm publish."
-fi
+  if ! git rev-parse -q --verify "refs/tags/${tag}" >/dev/null; then
+    skip "No git tag ${tag} for packages/node version ${pkg_ver}; skip npm publish."
+  fi
 
-TAG_COMMIT="$(git rev-list -n 1 "${TAG}")"
-HEAD_COMMIT="$(git rev-parse HEAD)"
-if [[ "$TAG_COMMIT" != "$HEAD_COMMIT" ]] &&
-  ! git merge-base --is-ancestor "$TAG_COMMIT" "$HEAD_COMMIT"; then
-  skip "Tag ${TAG} (${TAG_COMMIT}) is not an ancestor of HEAD; skip npm publish."
-fi
+  # Accept a v* tag on HEAD or on an ancestor (merge commits onto release
+  # usually do not carry the tag themselves).
+  tag_commit="$(git rev-list -n 1 "${tag}")"
+  head_commit="$(git rev-parse HEAD)"
+  if [[ "$tag_commit" != "$head_commit" ]] &&
+    ! git merge-base --is-ancestor "$tag_commit" "$head_commit"; then
+    skip "Tag ${tag} (${tag_commit}) is not an ancestor of HEAD; skip npm publish."
+  fi
 
-echo "Using tag ${TAG} at ${TAG_COMMIT} (HEAD=${HEAD_COMMIT})."
-emit "tag" "$TAG"
+  echo "Using tag ${tag} at ${tag_commit} (HEAD=${head_commit})."
+  emit "tag" "$tag"
+}
 
-PUBLISHED="$(npm view @b4moss/shardian version 2>/dev/null || true)"
-if [[ -z "$PUBLISHED" ]]; then
-  echo "@b4moss/shardian is not on npm yet; will publish ${PKG_VER}."
-  emit "skip" "false"
-  exit 0
-fi
+run_compare() {
+  local pkg_ver published local_tgz
+  # Keep compare staging dir in a global so the EXIT trap can see it under `set -u`.
+  pkg_ver="$(node -p "require('${PKG_DIR}/package.json').version")"
+  published="$(npm view @b4moss/shardian version 2>/dev/null || true)"
 
-if [[ ! -d "$PKG_DIR/dist" ]]; then
-  echo "packages/node/dist is missing; build before comparing to npm."
-  exit 1
-fi
+  if [[ -z "$published" ]]; then
+    echo "@b4moss/shardian is not on npm yet; will publish ${pkg_ver}."
+    emit "skip" "false"
+    exit 0
+  fi
 
-TMP="$(mktemp -d)"
-cleanup() { rm -rf "$TMP"; }
-trap cleanup EXIT
+  if [[ ! -d "$PKG_DIR/dist" ]]; then
+    echo "packages/node/dist is missing; build before comparing to npm."
+    exit 1
+  fi
 
-mkdir -p "$TMP/pub" "$TMP/local"
+  SHARDIAN_COMPARE_TMP="$(mktemp -d)"
+  cleanup_compare_tmp() { rm -rf "${SHARDIAN_COMPARE_TMP:-}"; }
+  trap cleanup_compare_tmp EXIT
 
-(
-  cd "$TMP"
-  npm pack "@b4moss/shardian@${PUBLISHED}" --silent >/dev/null
-  tar -xzf "b4moss-shardian-${PUBLISHED}.tgz" -C "$TMP/pub"
-)
+  mkdir -p "$SHARDIAN_COMPARE_TMP/pub" "$SHARDIAN_COMPARE_TMP/local"
 
-LOCAL_TGZ="$(
-  cd "$PKG_DIR"
-  npm pack --silent --pack-destination "$TMP"
-)"
-tar -xzf "$TMP/$LOCAL_TGZ" -C "$TMP/local"
+  (
+    cd "$SHARDIAN_COMPARE_TMP"
+    npm pack "@b4moss/shardian@${published}" --silent >/dev/null
+    tar -xzf "b4moss-shardian-${published}.tgz" -C "$SHARDIAN_COMPARE_TMP/pub"
+  )
 
-node <<EOF
+  local_tgz="$(
+    cd "$PKG_DIR"
+    npm pack --silent --pack-destination "$SHARDIAN_COMPARE_TMP"
+  )"
+  tar -xzf "$SHARDIAN_COMPARE_TMP/$local_tgz" -C "$SHARDIAN_COMPARE_TMP/local"
+
+  node <<EOF
 const fs = require("node:fs");
 const path = require("node:path");
 
@@ -95,13 +108,32 @@ function normalize(pkgDir) {
   fs.writeFileSync(file, JSON.stringify(json, null, 2) + "\n");
 }
 
-normalize("$TMP/pub/package");
-normalize("$TMP/local/package");
+normalize("$SHARDIAN_COMPARE_TMP/pub/package");
+normalize("$SHARDIAN_COMPARE_TMP/local/package");
 EOF
 
-if diff -rq "$TMP/pub/package" "$TMP/local/package" >/dev/null; then
-  skip "No @b4moss/shardian package content change vs npm@${PUBLISHED} (version-normalized); skip publish."
-fi
+  if diff -rq "$SHARDIAN_COMPARE_TMP/pub/package" "$SHARDIAN_COMPARE_TMP/local/package" >/dev/null; then
+    skip "No @b4moss/shardian package content change vs npm@${published} (version-normalized); skip publish."
+  fi
 
-echo "Package content differs from npm@${PUBLISHED}; will publish ${PKG_VER}."
-emit "skip" "false"
+  echo "Package content differs from npm@${published}; will publish ${pkg_ver}."
+  emit "skip" "false"
+}
+
+case "$MODE" in
+  gate)
+    run_gate
+    emit "skip" "false"
+    ;;
+  compare)
+    run_compare
+    ;;
+  all)
+    run_gate
+    run_compare
+    ;;
+  *)
+    echo "Unknown mode: ${MODE} (expected gate|compare|all)" >&2
+    exit 1
+    ;;
+esac
