@@ -10,14 +10,19 @@ on:
       - "packages/go/v[0-9]*"
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   release:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: write
     steps:
-      # No checkout: gh talks to the API; --verify-tag checks the remote tag.
+      # --verify-tag needs a local git repo (tag push checkout).
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
       - name: Create GitHub Release if missing
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
