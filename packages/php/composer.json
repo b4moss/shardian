@@ -1,0 +1,35 @@
+{
+  "name": "b4moss/shardian",
+  "description": "Create sharded path strings from filenames",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Bicycle for Mind LLC"
+    }
+  ],
+  "require": {
+    "php": "^8.1",
+    "ext-mbstring": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^10.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "B4moss\\Shardian\\": "src/"
+    },
+    "files": [
+      "src/CommonExtensions.php",
+      "src/functions.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "B4moss\\Shardian\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "phpunit"
+  }
+}
