@@ -76,7 +76,7 @@ Full contract: [`docs/specs/path-api.md`](docs/specs/path-api.md). Hub: [`docs/m
 
 - Node.js (Bun / Deno compatible): published on npm as `@b4moss/shardian`
 - Go: `github.com/b4moss/shardian/packages/go`
-- PHP: planned
+- PHP: `b4moss/shardian` (`packages/php`)
 
 ### Go
 
@@ -91,6 +91,21 @@ split, err := shardian.ShardianSplit("abc1234.jpg", nil)
 ```
 
 `go get github.com/b4moss/shardian/packages/go@latest`
+
+### PHP
+
+```php
+use function B4moss\Shardian\shardian;
+use function B4moss\Shardian\shardianSplit;
+
+$path = shardian('abc1234.jpg');
+// => '/a/b/c/1/abc1234.jpg'
+
+$split = shardianSplit('abc1234.jpg');
+// $split->pathOnly => '/a/b/c/1/'
+```
+
+`composer require b4moss/shardian`
 
 ## License
 
