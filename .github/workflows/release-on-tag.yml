@@ -1,13 +1,15 @@
 name: Release on tag
 
 # Language-scoped tags only:
-#   vX.Y.Z              → Node (@b4moss/shardian)
-#   packages/go/vX.Y.Z  → Go module (no npm)
+#   vX.Y.Z                → Node (@b4moss/shardian)
+#   packages/go/vX.Y.Z    → Go module (no npm)
+#   packages/php/vX.Y.Z   → PHP Composer (no npm)
 on:
   push:
     tags:
       - "v[0-9]*"
       - "packages/go/v[0-9]*"
+      - "packages/php/v[0-9]*"
 
 permissions:
   contents: read
@@ -40,6 +42,8 @@ jobs:
           TITLE="$TAG"
           if [[ "$TAG" == packages/go/v* ]]; then
             TITLE="Go ${TAG#packages/go/}"
+          elif [[ "$TAG" == packages/php/v* ]]; then
+            TITLE="PHP ${TAG#packages/php/}"
           elif [[ "$TAG" == v* ]]; then
             TITLE="Node ${TAG}"
           fi

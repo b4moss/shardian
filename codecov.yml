@@ -15,6 +15,10 @@ comment: false
 ignore:
   - "packages/node/dist/**"
   - "packages/node/coverage/**"
+  - "packages/php/vendor/**"
+  - "packages/php/coverage/**"
+  - "packages/php/.phpunit.cache/**"
   - "**/*.test.ts"
   - "**/*.test.js"
   - "**/*.d.ts"
+  - "**/tests/**"

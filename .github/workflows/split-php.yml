@@ -1,0 +1,45 @@
+name: Split PHP package
+
+# Mirror packages/php → github.com/b4moss/shardian-php for Packagist.
+# - main push (packages/php changed): update mirror main
+# - tag packages/php/vX.Y.Z: update mirror main + tag vX.Y.Z
+# Requires repo secret SHARDIAN_PHP_DEPLOY_KEY (deploy key on shardian-php, write).
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "packages/php/v[0-9]*"
+  workflow_dispatch:
+
+concurrency:
+  group: split-php-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  split:
+    name: push to shardian-php
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+
+      - name: Setup SSH deploy key
+        uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.SHARDIAN_PHP_DEPLOY_KEY }}
+
+      - name: Split and push
+        env:
+          MIRROR_REPO: git@github.com:b4moss/shardian-php.git
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_REF_TYPE: ${{ github.ref_type }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_EVENT_BEFORE: ${{ github.event.before }}
+        run: bash .github/scripts/split-php.sh
