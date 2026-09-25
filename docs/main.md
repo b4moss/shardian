@@ -11,7 +11,7 @@
 ### やること
 
 - ファイル名・階層文字数・深さからシャードパス文字列（またはパス分割オブジェクト）を返す
-- Node.js（Bun / Deno 互換、npm 配信）および Go モジュール。PHP は後続マイルストーン
+- Node.js（Bun / Deno 互換、npm 配信）、Go モジュール、および PHP（Composer）
 
 ### やらないこと
 
@@ -36,6 +36,7 @@
 | [_archived/README.md](./_archived/README.md) | 旧契約・歴史資料 |
 | [tests/shardian.md](./tests/shardian.md) | テスト仕様（Node.js・現行） |
 | [tests/shardian-go.md](./tests/shardian-go.md) | テスト仕様（Go） |
+| [tests/shardian-php.md](./tests/shardian-php.md) | テスト仕様（PHP） |
 
 ----
 
