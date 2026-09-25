@@ -28,7 +28,7 @@
 - いずれか一方のポートだけ版を上げてよい
 - Go / PHP だけの修正では Node の version / `v*` タグを触らない
 - Node だけの修正では `packages/go/v*` / `packages/php/v*` タグを打たない
-- PHP は `packages/php` を subtree split し [`b4moss/shardian-php`](https://github.com/b4moss/shardian-php) へ CD 同期する（`split-php` ワークフロー）
+- PHP は `packages/php` を subtree split し [`b4moss/shardian-php`](https://github.com/b4moss/shardian-php) へ CD 同期する（`split-php` ワークフロー。`main` / `release` への push、および `packages/php/v*` タグ）
 - タグを打つブランチは main（または出荷に使うコミットが乗っているブランチ）。詳細は CD ワークフローを正とする
 
 ----
