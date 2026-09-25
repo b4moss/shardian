@@ -23,11 +23,12 @@
 |--------|----------|---------|------|
 | Node.js | `packages/node/package.json` | `vX.Y.Z`（リポジトリルート） | npm（`release` ブランチへ `packages/node/**` の変更が入ったとき） |
 | Go | リリース意図（モジュールタグ） | `packages/go/vX.Y.Z` | Go Modules（タグのみ。npm は動かない） |
-| PHP | リリース意図（Composer タグ） | `packages/php/vX.Y.Z` | Packagist（タグ追従。登録は手動。npm は動かない） |
+| PHP | `packages/php`（正本） | モノレポ: `packages/php/vX.Y.Z` → ミラー `b4moss/shardian-php`: `vX.Y.Z` | Packagist（ミラーリポを追従。登録は手動） |
 
 - いずれか一方のポートだけ版を上げてよい
 - Go / PHP だけの修正では Node の version / `v*` タグを触らない
 - Node だけの修正では `packages/go/v*` / `packages/php/v*` タグを打たない
+- PHP は `packages/php` を subtree split し [`b4moss/shardian-php`](https://github.com/b4moss/shardian-php) へ CD 同期する（`split-php` ワークフロー）
 - タグを打つブランチは main（または出荷に使うコミットが乗っているブランチ）。詳細は CD ワークフローを正とする
 
 ----

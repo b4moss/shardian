@@ -76,7 +76,7 @@ Full contract: [`docs/specs/path-api.md`](docs/specs/path-api.md). Hub: [`docs/m
 
 - Node.js (Bun / Deno compatible): published on npm as `@b4moss/shardian`
 - Go: `github.com/b4moss/shardian/packages/go`
-- PHP: `b4moss/shardian` (`packages/php`)
+- PHP: `b4moss/shardian` via Packagist (mirror: [`b4moss/shardian-php`](https://github.com/b4moss/shardian-php); source: `packages/php`)
 
 ### Go
 

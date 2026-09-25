@@ -78,6 +78,7 @@
 
 - [versioning-rule.md](./versioning-rule.md)を参照。
 - Node: `vX.Y.Z` / Go: `packages/go/vX.Y.Z` / PHP: `packages/php/vX.Y.Z`（言語ポートごとに独立）
+- PHP の Packagist 用タグはミラー [`b4moss/shardian-php`](https://github.com/b4moss/shardian-php) 上の `vX.Y.Z`（CD が `packages/php/v*` から同期）
 - `release` は共通の出荷ブランチのまま。npm 公開は Node（`packages/node/**`）変更時のみ
 
 -----
