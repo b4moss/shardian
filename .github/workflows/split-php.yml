@@ -1,13 +1,14 @@
 name: Split PHP package
 
 # Mirror packages/php → github.com/b4moss/shardian-php for Packagist.
-# - main push (packages/php changed): update mirror main
+# - main / release push (packages/php changed): update mirror main
 # - tag packages/php/vX.Y.Z: update mirror main + tag vX.Y.Z
 # Requires repo secret SHARDIAN_PHP_DEPLOY_KEY (deploy key on shardian-php, write).
 on:
   push:
     branches:
       - main
+      - release
     tags:
       - "packages/php/v[0-9]*"
   workflow_dispatch:
