@@ -13,6 +13,7 @@ on:
     paths:
       - "packages/node/**"
       - "packages/go/**"
+      - "packages/php/**"
       - ".github/workflows/ci.yml"
       - "codecov.yml"
   pull_request:
@@ -23,6 +24,7 @@ on:
     paths:
       - "packages/node/**"
       - "packages/go/**"
+      - "packages/php/**"
       - ".github/workflows/ci.yml"
       - "codecov.yml"
 
@@ -41,13 +43,14 @@ jobs:
     outputs:
       node: ${{ steps.filter.outputs.node }}
       go: ${{ steps.filter.outputs.go }}
+      php: ${{ steps.filter.outputs.php }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
       - name: Filter paths
         id: filter
-        uses: dorny/paths-filter@v3
+        uses: dorny/paths-filter@0e4a8c6effa4802afeda77dc8d303f8176d7dfad # v3.0.4
         with:
           filters: |
             node:
@@ -60,6 +63,10 @@ jobs:
               - 'packages/go/**/*.go'
               - 'packages/go/go.mod'
               - 'packages/go/go.sum'
+            php:
+              - 'packages/php/**'
+              - '.github/workflows/ci.yml'
+              - 'codecov.yml'
 
   node:
     name: packages/node
@@ -72,10 +79,10 @@ jobs:
         working-directory: packages/node
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: "22"
           cache: npm
@@ -94,7 +101,7 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: github.event_name == 'push'
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@0fb7174895f61a3b6b78fc075e0cd60383518dac # v5.5.5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: packages/node/coverage/lcov.info
@@ -116,10 +123,10 @@ jobs:
         working-directory: packages/go
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
       - name: Setup Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5.6.0
         with:
           go-version: "1.22"
           cache-dependency-path: packages/go/go.sum
@@ -134,9 +141,50 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: github.event_name == 'push'
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@0fb7174895f61a3b6b78fc075e0cd60383518dac # v5.5.5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: packages/go/coverage.out
+          disable_search: true
+          fail_ci_if_error: false
+
+  php:
+    name: packages/php
+    needs: changes
+    if: needs.changes.outputs.php == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: packages/php
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f # 2.35.5
+        with:
+          php-version: "8.1"
+          extensions: mbstring
+          coverage: pcov
+          tools: composer
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Test
+        if: github.event_name == 'pull_request'
+        run: vendor/bin/phpunit
+
+      - name: Test with coverage
+        if: github.event_name == 'push'
+        run: vendor/bin/phpunit --coverage-clover coverage/clover.xml
+
+      - name: Upload coverage to Codecov
+        if: github.event_name == 'push'
+        uses: codecov/codecov-action@0fb7174895f61a3b6b78fc075e0cd60383518dac # v5.5.5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: packages/php/coverage/clover.xml
           disable_search: true
           fail_ci_if_error: false

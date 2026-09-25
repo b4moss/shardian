@@ -11,8 +11,14 @@
 
 | 候補 | 状態 | メモ |
 |------|------|------|
+| （なし） | — | — |
+
+完了（版未割当だった候補）:
+
+| 候補 | 状態 | メモ |
+|------|------|------|
 | Go モジュール | 実装済 | [#14](https://github.com/b4moss/shardian/issues/14) / `packages/go` |
-| PHP（Composer） | Issue のみ | [#18](https://github.com/b4moss/shardian/issues/18) |
+| PHP（Composer） | 実装済 | [#18](https://github.com/b4moss/shardian/issues/18) / `packages/php` |
 
 ----
 
