@@ -14,14 +14,14 @@ cleanup() {
 }
 trap cleanup EXIT
 
-# On main branch pushes, skip when packages/php (and split tooling) did not change.
-if [[ "${GITHUB_REF_TYPE}" == "branch" && "${GITHUB_REF_NAME}" == "main" ]]; then
+# On main/release branch pushes, skip when packages/php (and split tooling) did not change.
+if [[ "${GITHUB_REF_TYPE}" == "branch" && ( "${GITHUB_REF_NAME}" == "main" || "${GITHUB_REF_NAME}" == "release" ) ]]; then
   if [[ -n "${GITHUB_EVENT_BEFORE}" && "${GITHUB_EVENT_BEFORE}" =~ ^0+$ ]]; then
     : # first push / empty before — always split
   elif [[ -n "${GITHUB_EVENT_BEFORE}" ]]; then
     if ! git diff --name-only "${GITHUB_EVENT_BEFORE}" "${GITHUB_SHA}" \
       | grep -qE '^packages/php/|^\.github/workflows/split-php\.yml$|^\.github/scripts/split-php\.sh$'; then
-      echo "No packages/php changes on main; skipping split."
+      echo "No packages/php changes on ${GITHUB_REF_NAME}; skipping split."
       exit 0
     fi
   fi
