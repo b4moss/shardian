@@ -2,6 +2,9 @@
 
 Create sharded path strings from filenames.
 
+> **Source of truth:** [`b4moss/shardian`](https://github.com/b4moss/shardian) (`packages/php`)  
+> **Packagist mirror:** [`b4moss/shardian-php`](https://github.com/b4moss/shardian-php) (CD-updated; do not edit by hand)
+
 ```php
 use function B4moss\Shardian\shardian;
 use function B4moss\Shardian\shardianSplit;
@@ -20,8 +23,7 @@ $split = shardianSplit('abc1234.jpg');
 composer require b4moss/shardian
 ```
 
-See the repository root README and `docs/specs/path-api.md` for the full contract.
-PHP test cases: `docs/tests/shardian-php.md`.
+Full contract and tests live in the monorepo: `docs/specs/path-api.md`, `docs/tests/shardian-php.md`.
 
 ## License
 

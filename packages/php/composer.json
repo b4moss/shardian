@@ -3,6 +3,11 @@
   "description": "Create sharded path strings from filenames",
   "type": "library",
   "license": "MIT",
+  "homepage": "https://github.com/b4moss/shardian",
+  "support": {
+    "issues": "https://github.com/b4moss/shardian/issues",
+    "source": "https://github.com/b4moss/shardian/tree/main/packages/php"
+  },
   "authors": [
     {
       "name": "Bicycle for Mind LLC"
