@@ -33,7 +33,7 @@ OKF の版索引は [`index.md`](./index.md)（`okf_version` のみ）。本文�
 | 文書 | 内容 |
 |------|------|
 | [roadmap.md](./roadmap.md) | マイルストーン |
-| [specs/path-api.md](./specs/path-api.md) | パス生成 API（現行・v0.4.0） |
+| [specs/path-api.md](./specs/path-api.md) | パス生成 API（現行契約 v0.4.0。配信版はポートごとに独立） |
 | [plans/README.md](./plans/README.md) | 未実装計画の索引 |
 | [_archived/README.md](./_archived/README.md) | 旧契約・歴史資料 |
 | [tests/shardian.md](./tests/shardian.md) | テスト仕様（Node.js・現行） |

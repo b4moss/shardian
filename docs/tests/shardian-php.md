@@ -1,8 +1,9 @@
 # shardian テスト仕様（PHP）
 
-- **対象マイルストーン**: `v0.4.0` 契約（PHP / `b4moss/shardian` / `packages/php`）
-- **対象ロジック**: `shardian(string $fileName, ?array $option = null): string` / `shardianSplit(string $fileName, ?array $option = null): SplitPath`
-- **機能仕様**: [specs/path-api.md](../specs/path-api.md)
+- **API 契約**: `v0.4.0`（[specs/path-api.md](../specs/path-api.md)）
+- **配信版**: モノレポタグ `packages/php/v0.6.0`（Composer `b4moss/shardian` / 正本 `packages/php`）
+- **対象ロジック**: `shardian(string $fileName, ?array $option = null): string` / `shardianSplit(string $fileName, ?array $option = null): SplitPath` / 定数 `COMMON_EXTENSIONS`
+- **実装テスト**: `packages/php/tests/ShardianTest.php`
 - **Node 版テスト仕様**: [shardian.md](./shardian.md)（ケース対応は同一）
 - **Go 版テスト仕様**: [shardian-go.md](./shardian-go.md)（ケース対応は同一）
 
