@@ -14,6 +14,7 @@ OKF の版索引。プロダクトの目的・スコープ等の本文は [READM
 # Project Docs
 
 * [roadmap.md](roadmap.md) - マイルストーン一覧
+* [wishlist.md](wishlist.md) - PO メモ（未整理）
 * [plans](plans/) - これからやる内容
 * [specs](specs/) - 現行機能の仕様正本
 * [tests](tests/) - テスト仕様（specs と同じドメイン切り）

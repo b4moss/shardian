@@ -70,7 +70,7 @@ shardian('.jpg')
 // Error
 ```
 
-Full contract: [`docs/specs/path-api.md`](docs/specs/path-api.md). Hub: [`docs/main.md`](docs/main.md).
+Full contract: [`docs/specs/path-api.md`](docs/specs/path-api.md). Hub: [`docs/README.md`](docs/README.md).
 
 ## Supported runtimes
 
