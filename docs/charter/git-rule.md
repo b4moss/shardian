@@ -1,3 +1,10 @@
+---
+type: Rule
+title: Git運用のルール
+description: リモート・ブランチ・PR・コミット・タグの運用ルール。
+tags: [charter, git]
+timestamp: 2026-08-25T02:54:35Z
+---
 # Git運用のルール
 
 ## リモート
@@ -77,9 +84,7 @@
 ## タグの切り方
 
 - [versioning-rule.md](./versioning-rule.md)を参照。
-- Node: `vX.Y.Z` / Go: `packages/go/vX.Y.Z`（言語ポートごとに独立）
-- `release` は共通の出荷ブランチのまま。npm 公開は Node（`packages/node/**`）変更時のみ
-
+ 
 -----
 
 以上

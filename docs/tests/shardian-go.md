@@ -1,9 +1,11 @@
 # shardian テスト仕様（Go）
 
-- **対象マイルストーン**: `v0.4.0` 契約（Go / `github.com/b4moss/shardian/packages/go`）
-- **対象ロジック**: `Shardian(fileName string, opt *Option) (string, error)` / `ShardianSplit(fileName string, opt *Option) (SplitPath, error)`
-- **機能仕様**: [specs/path-api.md](../specs/path-api.md)
+- **API 契約**: `v0.4.0`（[specs/path-api.md](../specs/path-api.md)）
+- **配信版**: モジュールタグ `packages/go/v1.0.0`（`github.com/b4moss/shardian/packages/go`）
+- **対象ロジック**: `Shardian(fileName string, opt *Option) (string, error)` / `ShardianSplit(fileName string, opt *Option) (SplitPath, error)` / `CommonExtensions`
+- **実装テスト**: `packages/go/shardian_test.go`
 - **Node 版テスト仕様**: [shardian.md](./shardian.md)（ケース対応は同一）
+- **PHP 版テスト仕様**: [shardian-php.md](./shardian-php.md)（ケース対応は同一）
 
 文字は Unicode スカラー値（Go の `rune` / JS の code point）単位。
 

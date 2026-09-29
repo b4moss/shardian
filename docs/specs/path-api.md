@@ -1,13 +1,27 @@
 # パス生成 API
 
-- **状態**: 出荷済み（`@b4moss/shardian@0.4.0` / Go `packages/go`）
-- **マイルストーン**: `v0.4.0`
-- **関連**: [docs/tests/shardian.md](../tests/shardian.md)、[docs/tests/shardian-go.md](../tests/shardian-go.md)、[README.md](../../README.md)
+- **状態**: 出荷済み（言語横断の同一契約）
+- **API 契約マイルストーン**: `v0.4.0`（`includeFileName` 廃止後の現行契約。roadmap の版名と一致）
+- **配信版（ポートごとに独立 SemVer）**:
+  - Node.js: `@b4moss/shardian@1.0.0`（`packages/node` / タグ `v1.0.0`）
+  - Go: `packages/go`（モジュールタグ `packages/go/v1.0.0`）
+  - PHP: `b4moss/shardian`（モノレポタグ `packages/php/v1.0.0` / Packagist ミラー追従）
+- **関連**: [tests/shardian.md](../tests/shardian.md)、[tests/shardian-go.md](../tests/shardian-go.md)、[tests/shardian-php.md](../tests/shardian-php.md)、[pillar](../README.md)、[ルート README](../../README.md)
 - **前版**: [path-api-v0.3.0.md](../_archived/specs/path-api-v0.3.0.md)
 
 ## 目的
 
 ファイル名の先頭から、指定した文字数・深さでシャード階層パスを組み立てる。
+
+## 公開面（言語別）
+
+| 言語 | 公開シンボル |
+|------|----------------|
+| Node.js | `shardian`、`COMMON_EXTENSIONS`、型 `InsufficientChars` / `ShardianOption` / `ShardianSplitPath`（`packages/node/src/index.ts`） |
+| Go | `Shardian`、`ShardianSplit`、`Option`、`SplitPath`、`CommonExtensions`、`InsufficientIgnore` / `InsufficientWarn` / `InsufficientThrow`（`packages/go`） |
+| PHP | `shardian`、`shardianSplit`、`SplitPath`、定数 `COMMON_EXTENSIONS`（名前空間 `B4moss\Shardian`） |
+
+CLI・バイナリ入口は持たない（ライブラリのみ）。
 
 ## 関数契約
 
@@ -33,10 +47,11 @@ function shardian(fileName: string, option?: ShardianOption): string | ShardianS
 ```
 
 - 第1引数名は **`fileName`**（パス区切りを含まないファイル名）
-- 第2引数は **`option?: ShardianOption`**。省略または `undefined` で全デフォルト。`null` は受けない
-- 公開定数 **`COMMON_EXTENSIONS`**（ドット付き拡張子の配列）をエクスポートする
+- 第2引数は **`option?: ShardianOption`**。省略または `undefined` で全デフォルト（型上 `null` は受けない）
+- 公開定数 **`COMMON_EXTENSIONS`**（ドット付き拡張子の配列）をエクスポートする。Go は `CommonExtensions`、PHP は `COMMON_EXTENSIONS`
 - `includeFileName` は存在しない
-- **Go 写経**: `splitPathFilename` は `Shardian` / `ShardianSplit` の関数分離。`warn` は標準 `log`。詳細は [tests/shardian-go.md](../tests/shardian-go.md)
+- **Go 写経**: `splitPathFilename` は `Shardian` / `ShardianSplit` の関数分離。`warn` は標準 `log`。`opt == nil` がデフォルト。詳細は [tests/shardian-go.md](../tests/shardian-go.md)
+- **PHP 写経**: `splitPathFilename` は `shardian` / `shardianSplit` の関数分離。オプションは連想配列（camelCase）。`$option === null` がデフォルト。`warn` は `trigger_error(..., E_USER_WARNING)`。エラーは `InvalidArgumentException`。詳細は [tests/shardian-php.md](../tests/shardian-php.md)
 
 ### フィールド
 
