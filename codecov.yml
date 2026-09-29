@@ -18,6 +18,8 @@ ignore:
   - "packages/php/vendor/**"
   - "packages/php/coverage/**"
   - "packages/php/.phpunit.cache/**"
+  # Composer files-autoload data const; executed at PHPUnit bootstrap before coverage starts
+  - "packages/php/src/CommonExtensions.php"
   - "**/*.test.ts"
   - "**/*.test.js"
   - "**/*.d.ts"

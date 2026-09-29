@@ -1,9 +1,11 @@
 # shardian テスト仕様（Node.js）
 
-- **対象マイルストーン**: `v0.4.0`（Node.js / `@b4moss/shardian`）
-- **対象ロジック**: `shardian(fileName: string, option?: ShardianOption)`
-- **機能仕様**: [specs/path-api.md](../specs/path-api.md)
+- **API 契約**: `v0.4.0`（[specs/path-api.md](../specs/path-api.md)）
+- **配信版**: `@b4moss/shardian@0.4.0`（`packages/node`）
+- **対象ロジック**: `shardian(fileName: string, option?: ShardianOption)` / 公開定数 `COMMON_EXTENSIONS`
+- **実装テスト**: `packages/node/src/shardian.test.ts`
 - **Go 版テスト仕様**: [shardian-go.md](./shardian-go.md)（ケース対応は同一）
+- **PHP 版テスト仕様**: [shardian-php.md](./shardian-php.md)（ケース対応は同一）
 
 文字は Unicode スカラー値（code point）単位。
 
@@ -12,7 +14,7 @@
 ### shardian
 
 - 第1引数 `fileName` と任意の第2引数 `option` から、先頭 `dirLetterCount` 文字 × 最大 `dirNestDepth` 段のディレクトリを組む
-- `option` 省略時は全デフォルト（`dirLetterCount: 1`, `dirNestDepth: 4`, `insufficientChars: 'ignore'`, `stripHeadSlash: false`, `splitPathFilename: false`）
+- `option` 省略時（または `undefined`）は全デフォルト（`dirLetterCount: 1`, `dirNestDepth: 4`, `insufficientChars: 'ignore'`, `stripHeadSlash: false`, `splitPathFilename: false`）
 - 文字列戻り値は **常に**末尾にファイル名を含む（`includeFileName` は存在しない）
 - `stripHeadSlash` 省略時は先頭 `/` 付き。`true` なら先頭 `/` なし
 - 文字不足時は切れる範囲だけでパスを返す
@@ -34,6 +36,7 @@
 - `shardian('ab', { dirLetterCount: 1, dirNestDepth: 4 })` → `'/a/b/ab'`（WARN なし・デフォルト ignore）
 - `shardian('ab', { dirLetterCount: 1, dirNestDepth: 4, insufficientChars: 'warn' })` → `'/a/b/ab'` かつ WARN
 - `shardian('.gitignore')` → `'/./g/i/t/.gitignore'`（dotfile・拡張子のみ判定の対象外・WARN なし）
+- `shardian('.jpg', { extensionOnlyList: ['.custom'] })` → `'/./j/p/g/.jpg'`（リスト完全置換・`.jpg` は対象外）
 
 #### テスト: 異常系
 
@@ -49,7 +52,6 @@
 - `shardian('../')` → エラー
 - `shardian('.jpg')` → エラー（`COMMON_EXTENSIONS` に含まれる拡張子のみ）
 - `shardian('.JPG')` → エラー（大小無視）
-- `shardian('.jpg', { extensionOnlyList: ['.custom'] })` → 通る（リスト完全置換・`.jpg` は対象外）
 - `shardian('.custom', { extensionOnlyList: ['.custom'] })` → エラー
 - `shardian('.jpg', { extensionOnlyList: [] })` → エラー（空配列は `COMMON_EXTENSIONS` へフォールバック）
 - `shardian('a.jpg', { extensionOnlyList: ['jpg'] })` → エラー（リスト要素の先頭 `.` 欠落）

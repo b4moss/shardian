@@ -1,6 +1,15 @@
 import assert from 'node:assert/strict'
 import { mock, test } from 'node:test'
+import {
+  COMMON_EXTENSIONS as INDEX_COMMON_EXTENSIONS,
+  shardian as indexShardian,
+} from './index.js'
 import { COMMON_EXTENSIONS, shardian } from './shardian.js'
+
+test('index re-exports', () => {
+  assert.equal(indexShardian, shardian)
+  assert.equal(INDEX_COMMON_EXTENSIONS, COMMON_EXTENSIONS)
+})
 
 test('shardian: normal cases', async (t) => {
   await t.test('builds full path with defaults and no warn', () => {
@@ -8,6 +17,13 @@ test('shardian: normal cases', async (t) => {
     assert.equal(shardian('abc1234.jpg'), '/a/b/c/1/abc1234.jpg')
     assert.equal(warn.mock.callCount(), 0)
     warn.mock.restore()
+  })
+
+  await t.test('segments unicode code points', () => {
+    assert.equal(
+      shardian('あいうえ.jpg', { dirLetterCount: 1, dirNestDepth: 3 }),
+      '/あ/い/う/あいうえ.jpg',
+    )
   })
 
   await t.test('builds two-char segments without warn', () => {

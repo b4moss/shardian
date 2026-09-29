@@ -2,6 +2,8 @@
 
 ファイル名からシャード階層パス文字列を生成するライブラリ。
 
+OKF の版索引は [`index.md`](./index.md)（`okf_version` のみ）。本文はここに書く。
+
 ## 目的
 
 ストレージや静的配信でよく使う、ファイル名プレフィックスによるディレクトリ分割パスを、言語横断で同じ契約で生成する。
@@ -31,12 +33,14 @@
 | 文書 | 内容 |
 |------|------|
 | [roadmap.md](./roadmap.md) | マイルストーン |
-| [specs/path-api.md](./specs/path-api.md) | パス生成 API（現行・v0.4.0） |
+| [specs/path-api.md](./specs/path-api.md) | パス生成 API（現行契約 v0.4.0。配信版はポートごとに独立） |
 | [plans/README.md](./plans/README.md) | 未実装計画の索引 |
 | [_archived/README.md](./_archived/README.md) | 旧契約・歴史資料 |
 | [tests/shardian.md](./tests/shardian.md) | テスト仕様（Node.js・現行） |
 | [tests/shardian-go.md](./tests/shardian-go.md) | テスト仕様（Go） |
 | [tests/shardian-php.md](./tests/shardian-php.md) | テスト仕様（PHP） |
+| [charter/](./charter/) | 憲章・OKF |
+| [override-charter.md](./override-charter.md) | 憲章のオーバーライド |
 
 ----
 
