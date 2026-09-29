@@ -1,7 +1,7 @@
 # shardian テスト仕様（Go）
 
 - **API 契約**: `v0.4.0`（[specs/path-api.md](../specs/path-api.md)）
-- **配信版**: モジュールタグ `packages/go/v0.5.0`（`github.com/b4moss/shardian/packages/go`）
+- **配信版**: モジュールタグ `packages/go/v1.0.0`（`github.com/b4moss/shardian/packages/go`）
 - **対象ロジック**: `Shardian(fileName string, opt *Option) (string, error)` / `ShardianSplit(fileName string, opt *Option) (SplitPath, error)` / `CommonExtensions`
 - **実装テスト**: `packages/go/shardian_test.go`
 - **Node 版テスト仕様**: [shardian.md](./shardian.md)（ケース対応は同一）

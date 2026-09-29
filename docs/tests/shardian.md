@@ -1,7 +1,7 @@
 # shardian テスト仕様（Node.js）
 
 - **API 契約**: `v0.4.0`（[specs/path-api.md](../specs/path-api.md)）
-- **配信版**: `@b4moss/shardian@0.4.0`（`packages/node`）
+- **配信版**: `@b4moss/shardian@1.0.0`（`packages/node`）
 - **対象ロジック**: `shardian(fileName: string, option?: ShardianOption)` / 公開定数 `COMMON_EXTENSIONS`
 - **実装テスト**: `packages/node/src/shardian.test.ts`
 - **Go 版テスト仕様**: [shardian-go.md](./shardian-go.md)（ケース対応は同一）
