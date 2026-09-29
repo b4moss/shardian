@@ -13,6 +13,14 @@
     <include>
       <directory>src</directory>
     </include>
+    <!--
+      Data-only const loaded via Composer "files" autoload during PHPUnit bootstrap.
+      PCOV/Xdebug start after bootstrap, so every array line would otherwise stay at 0%
+      and drag port coverage (~48%) despite 100% logic coverage in ShardianInternal.
+    -->
+    <exclude>
+      <file>src/CommonExtensions.php</file>
+    </exclude>
   </source>
   <coverage>
     <report>

@@ -245,12 +245,54 @@ func TestShardianNormalCases(t *testing.T) {
 			t.Fatalf("got %q", got)
 		}
 	})
+
+	t.Run("segments unicode code points", func(t *testing.T) {
+		got, err := Shardian("あいうえ.jpg", &Option{
+			DirLetterCount: p(1),
+			DirNestDepth:   p(3),
+		})
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if got != "/あ/い/う/あいうえ.jpg" {
+			t.Fatalf("got %q", got)
+		}
+	})
+
+	t.Run("empty InsufficientChars falls back to ignore", func(t *testing.T) {
+		out := captureLog(t, func() {
+			got, err := Shardian("ab", &Option{
+				DirLetterCount:    p(1),
+				DirNestDepth:      p(4),
+				InsufficientChars: "",
+			})
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if got != "/a/b/ab" {
+				t.Fatalf("got %q", got)
+			}
+		})
+		if out != "" {
+			t.Fatalf("expected no warn, got %q", out)
+		}
+	})
 }
 
 func TestShardianErrorCases(t *testing.T) {
 	t.Run("empty fileName errors", func(t *testing.T) {
 		if _, err := Shardian("", nil); err == nil {
 			t.Fatal("expected error")
+		}
+	})
+
+	t.Run("ShardianSplit empty fileName errors", func(t *testing.T) {
+		got, err := ShardianSplit("", nil)
+		if err == nil {
+			t.Fatal("expected error")
+		}
+		if got != (SplitPath{}) {
+			t.Fatalf("expected zero SplitPath on error, got %+v", got)
 		}
 	})
 
