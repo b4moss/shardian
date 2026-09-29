@@ -8,6 +8,8 @@ use B4moss\Shardian\SplitPath;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
+use const B4moss\Shardian\COMMON_EXTENSIONS;
+
 use function B4moss\Shardian\shardian;
 use function B4moss\Shardian\shardianSplit;
 
@@ -226,6 +228,11 @@ final class ShardianTest extends TestCase
         shardian('../');
     }
 
+    public function testCommonExtensionsIncludesJpg(): void
+    {
+        $this->assertContains('.jpg', COMMON_EXTENSIONS);
+    }
+
     public function testExtensionOnlyThrows(): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -254,6 +261,50 @@ final class ShardianTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         shardian('a.jpg', ['extensionOnlyList' => ['jpg']]);
+    }
+
+    public function testEmptyInsufficientCharsFallsBackToIgnore(): void
+    {
+        $warnings = $this->captureWarnings(function () use (&$got): void {
+            $got = shardian('ab', [
+                'dirLetterCount' => 1,
+                'dirNestDepth' => 4,
+                'insufficientChars' => '',
+            ]);
+        });
+
+        $this->assertSame('/a/b/ab', $got);
+        $this->assertSame([], $warnings);
+    }
+
+    public function testNullInsufficientCharsFallsBackToIgnore(): void
+    {
+        $warnings = $this->captureWarnings(function () use (&$got): void {
+            /** @phpstan-ignore-next-line intentional null to hit option guard */
+            $got = shardian('ab', [
+                'dirLetterCount' => 1,
+                'dirNestDepth' => 4,
+                'insufficientChars' => null,
+            ]);
+        });
+
+        $this->assertSame('/a/b/ab', $got);
+        $this->assertSame([], $warnings);
+    }
+
+    public function testUnicodeCodePointsAreSegmented(): void
+    {
+        $got = shardian('あいうえ.jpg', [
+            'dirLetterCount' => 1,
+            'dirNestDepth' => 3,
+        ]);
+
+        $this->assertSame('/あ/い/う/あいうえ.jpg', $got);
+    }
+
+    public function testOptionNullExplicitlyUsesDefaults(): void
+    {
+        $this->assertSame('/a/b/c/1/abc1234.jpg', shardian('abc1234.jpg', null));
     }
 
     /**
