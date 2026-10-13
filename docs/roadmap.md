@@ -11,11 +11,13 @@
 
 ## 配信版（現行契約 v0.4.0 を実装）
 
+v1.0.0 は既存 path-api 契約（v0.4.0）に対する**安定稼働の宣言**であり、振る舞い変更はない（[#68](https://github.com/b4moss/shardian/issues/68)）。
+
 | ポート | タグ / 版 | 置き場 |
 |--------|-----------|--------|
-| Node.js | `v0.4.0` / `@b4moss/shardian@0.4.0` | `packages/node` |
-| Go | `packages/go/v0.5.0` | `packages/go` |
-| PHP | `packages/php/v0.6.0` | `packages/php`（Packagist ミラー追従） |
+| Node.js | `v1.0.0` / `@b4moss/shardian@1.0.0` | `packages/node` |
+| Go | `packages/go/v1.0.0` | `packages/go` |
+| PHP | `packages/php/v1.0.0` | `packages/php`（Packagist ミラー追従） |
 
 ## 将来（版未割当）
 
@@ -27,8 +29,8 @@
 
 | 候補 | 状態 | メモ |
 |------|------|------|
-| Go モジュール | 実装済 | [#14](https://github.com/b4moss/shardian/issues/14) / `packages/go` / タグ `packages/go/v0.5.0` |
-| PHP（Composer） | 実装済 | [#18](https://github.com/b4moss/shardian/issues/18) / `packages/php` / タグ `packages/php/v0.6.0` |
+| Go モジュール | 実装済 | [#14](https://github.com/b4moss/shardian/issues/14) / `packages/go` / 現行タグ `packages/go/v1.0.0` |
+| PHP（Composer） | 実装済 | [#18](https://github.com/b4moss/shardian/issues/18) / `packages/php` / 現行タグ `packages/php/v1.0.0` |
 
 ----
 

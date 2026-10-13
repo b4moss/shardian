@@ -2,8 +2,12 @@ name: Split PHP package
 
 # Mirror packages/php → github.com/b4moss/shardian-php for Packagist.
 # - main / release push (packages/php changed): update mirror main
-# - tag packages/php/vX.Y.Z: update mirror main + tag vX.Y.Z
-# Requires repo secret SHARDIAN_PHP_DEPLOY_KEY (deploy key on shardian-php, write).
+# - tag packages/php/vX.Y.Z: update mirror main + tag vX.Y.Z + Packagist ping
+# Requires:
+#   - SHARDIAN_PHP_DEPLOY_KEY (deploy key on shardian-php, write)
+#   - PACKAGIST_USERNAME / PACKAGIST_TOKEN (optional but recommended; Packagist update API)
+# Dist repo should also have a GitHub webhook → Packagist (auto-update).
+# See https://github.com/b4moss/shardian/issues/73
 on:
   push:
     branches:
@@ -44,3 +48,20 @@ jobs:
           GITHUB_SHA: ${{ github.sha }}
           GITHUB_EVENT_BEFORE: ${{ github.event.before }}
         run: bash .github/scripts/split-php.sh
+
+      - name: Ping Packagist update
+        if: github.ref_type == 'tag' && startsWith(github.ref_name, 'packages/php/v')
+        env:
+          PACKAGIST_TOKEN: ${{ secrets.PACKAGIST_TOKEN }}
+          PACKAGIST_USERNAME: ${{ secrets.PACKAGIST_USERNAME }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${PACKAGIST_TOKEN:-}" || -z "${PACKAGIST_USERNAME:-}" ]]; then
+            echo "PACKAGIST_USERNAME / PACKAGIST_TOKEN not set; skip Packagist ping (rely on GitHub webhook)."
+            exit 0
+          fi
+          curl -sS -X POST \
+            "https://packagist.org/api/update-package?username=${PACKAGIST_USERNAME}&apiToken=${PACKAGIST_TOKEN}" \
+            -H 'Content-Type: application/json' \
+            -d '{"repository":{"url":"https://github.com/b4moss/shardian-php"}}'
+          echo

@@ -6,8 +6,8 @@
 
 | 候補 | Issue | 正本 |
 |------|-------|------|
-| Go モジュール版 | [#14](https://github.com/b4moss/shardian/issues/14) | [specs/path-api.md](../specs/path-api.md) / [tests/shardian-go.md](../tests/shardian-go.md)（タグ `packages/go/v0.5.0`） |
-| PHP（Composer）版 | [#18](https://github.com/b4moss/shardian/issues/18) | [specs/path-api.md](../specs/path-api.md) / [tests/shardian-php.md](../tests/shardian-php.md)（タグ `packages/php/v0.6.0`） |
+| Go モジュール版 | [#14](https://github.com/b4moss/shardian/issues/14) | [specs/path-api.md](../specs/path-api.md) / [tests/shardian-go.md](../tests/shardian-go.md)（現行タグ `packages/go/v1.0.0`） |
+| PHP（Composer）版 | [#18](https://github.com/b4moss/shardian/issues/18) | [specs/path-api.md](../specs/path-api.md) / [tests/shardian-php.md](../tests/shardian-php.md)（現行タグ `packages/php/v1.0.0`） |
 
 現行仕様は [specs/path-api.md](../specs/path-api.md)。旧契約は [_archived/specs/](../_archived/specs/)。
 

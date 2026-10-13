@@ -3,9 +3,9 @@
 - **状態**: 出荷済み（言語横断の同一契約）
 - **API 契約マイルストーン**: `v0.4.0`（`includeFileName` 廃止後の現行契約。roadmap の版名と一致）
 - **配信版（ポートごとに独立 SemVer）**:
-  - Node.js: `@b4moss/shardian@0.4.0`（`packages/node` / タグ `v0.4.0`）
-  - Go: `packages/go`（モジュールタグ `packages/go/v0.5.0`）
-  - PHP: `b4moss/shardian`（モノレポタグ `packages/php/v0.6.0` / Packagist ミラー追従）
+  - Node.js: `@b4moss/shardian@1.0.0`（`packages/node` / タグ `v1.0.0`）
+  - Go: `packages/go`（モジュールタグ `packages/go/v1.0.0`）
+  - PHP: `b4moss/shardian`（モノレポタグ `packages/php/v1.0.0` / Packagist ミラー追従）
 - **関連**: [tests/shardian.md](../tests/shardian.md)、[tests/shardian-go.md](../tests/shardian-go.md)、[tests/shardian-php.md](../tests/shardian-php.md)、[pillar](../README.md)、[ルート README](../../README.md)
 - **前版**: [path-api-v0.3.0.md](../_archived/specs/path-api-v0.3.0.md)
 
