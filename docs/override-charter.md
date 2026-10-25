@@ -7,7 +7,7 @@ timestamp: 2026-08-19T02:18:29Z
 ---
 # このプロジェクト独自のルール（憲章をオーバーライドする範囲）
 
-ここに記述された内容は、憲章（`docs/charter/`）より優先される。
+ここに記述された内容は、憲章（AGENTS.md の charter 節が指す b4moss/charter v1）より本ファイルを優先する。
 
 ## 言語ポートごとの独立版
 
@@ -27,7 +27,7 @@ timestamp: 2026-08-19T02:18:29Z
 
 ## タグの切り方（補足）
 
-憲章の [versioning-rule.md](./charter/versioning-rule.md) / [git-rule.md](./charter/git-rule.md) に加え、本リポジトリでは次を守る。
+憲章の [versioning-rule.md](https://github.com/b4moss/charter/blob/v1/docs/charter/versioning-rule.md) / [git-rule.md](https://github.com/b4moss/charter/blob/v1/docs/charter/git-rule.md) に加え、本リポジトリでは次を守る。
 
 - Node: `vX.Y.Z` / Go: `packages/go/vX.Y.Z` / PHP: `packages/php/vX.Y.Z`（言語ポートごとに独立）
 - PHP の Packagist 用タグはミラー [`b4moss/shardian-php`](https://github.com/b4moss/shardian-php) 上の `vX.Y.Z`（CD が `packages/php/v*` から同期）
