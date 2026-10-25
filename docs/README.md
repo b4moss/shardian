@@ -24,7 +24,7 @@ OKF の版索引は [`index.md`](./index.md)（`okf_version` のみ）。本文�
 ## 技術方針
 
 - パッケージライブラリ（薄い DDD の CRUD Trait は採用しない）
-- 憲章（`docs/charter/`）に従う。独自例外は `docs/override-charter.md`
+- 憲章は AGENTS.md の「開発憲章（charter）」節（[b4moss/charter v1](https://github.com/b4moss/charter/tree/v1/docs/charter)）に従う。独自例外は `docs/override-charter.md`
 - 仕様正本の置き場は本ファイルおよび `docs/specs/`（未実装は `docs/plans/`）
 - テスト仕様は `docs/tests/`
 
@@ -39,7 +39,7 @@ OKF の版索引は [`index.md`](./index.md)（`okf_version` のみ）。本文�
 | [tests/shardian.md](./tests/shardian.md) | テスト仕様（Node.js・現行） |
 | [tests/shardian-go.md](./tests/shardian-go.md) | テスト仕様（Go） |
 | [tests/shardian-php.md](./tests/shardian-php.md) | テスト仕様（PHP） |
-| [charter/](./charter/) | 憲章・OKF |
+| [b4moss/charter v1](https://github.com/b4moss/charter/tree/v1/docs/charter) | 憲章・OKF（リポ外） |
 | [override-charter.md](./override-charter.md) | 憲章のオーバーライド |
 
 ----
